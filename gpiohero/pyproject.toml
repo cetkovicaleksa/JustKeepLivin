@@ -1,7 +1,9 @@
 [project]
 name = "gpiohero"
-version = "0.1.0"
-description = "Add your description here"
+version = "1.0.0"
+description = "Adapter library for Raspberry Pi devices with built-in simulation support."
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "gpiozero>=2.0.1",
+]
