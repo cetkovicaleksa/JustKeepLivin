@@ -2,6 +2,7 @@
 name = "gpiohero"
 version = "1.0.0"
 description = "Adapter library for Raspberry Pi devices with built-in simulation support."
+authors = ["Алекса Ћетковић <cetkovic.sv77.2022@uns.ac.rs>"]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
