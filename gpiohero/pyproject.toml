@@ -1,0 +1,21 @@
+[project]
+name = "gpiohero"
+version = "2026.1.0"
+description = "Adapter library for multiple raspberry pi libraries, with unified mocking and simulation. Made for an IoT project."
+readme = "README.md"
+authors = [
+    { name = "Алекса Ћетковић", email = "cetkovic.sv77.2022@uns.ac.rs" }
+]
+requires-python = ">=3.9"
+dependencies = [
+    "gpiozero>=2.0.1",
+]
+
+[project.optional-dependencies]
+rpi-gpio = [
+    "rpi-gpio>=0.7.1",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
