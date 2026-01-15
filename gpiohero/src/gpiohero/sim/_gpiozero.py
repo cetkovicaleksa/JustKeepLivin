@@ -1,10 +1,20 @@
+__all__ = [ 
+    'Button', 
+    'MotionSensor', 
+    'DistanceSensor',
+# ---
+    'LED', 
+    'RGBLED', 
+    'Buzzer', 
+]
+
 import time
 import random
 import logging
-import threading
 from functools import wraps
 
 from gpiozero.pins.mock import MockFactory
+from gpiozero.threads import GPIOThread
 from gpiozero import (
     LED as _ZeroLED, Buzzer as _ZeroBuzzer, RGBLED as _ZeroRGBLED,
     Button as _ZeroButton, MotionSensor as _ZeroMotionSensor, DistanceSensor as _ZeroDistanceSensor
@@ -12,19 +22,19 @@ from gpiozero import (
 
 _mock_factory = MockFactory()
 
-# TODO: Simulate devices, not just mock
-
 # region Sensors
 
 class Button(_ZeroButton):
+    SIM_PRESS_TIME_RANGE = 2, 10
+    SIM_HOLD_DURATION_RANGE = .5, 2
 
     def __init__(self, pin=None, *, pull_up=True, active_state=None, bounce_time=None, hold_time=1, hold_repeat=False, pin_factory=None):
         super().__init__(pin, pull_up=pull_up, active_state=active_state, bounce_time=bounce_time, hold_time=hold_time, hold_repeat=hold_repeat, pin_factory=_mock_factory)
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}@{self.pin}")
 
-        self._stop_simulation = threading.Event()
-        threading.Thread(target=self._simulator, daemon=True).start()
+        self._simulation_thread = GPIOThread(self._simulator)
+        self._simulation_thread.start()
 
     def _fire_activated(self):
         self._logger.debug("Pressed")
@@ -37,14 +47,23 @@ class Button(_ZeroButton):
     def _simulator(self):
         self._logger.debug("Starting simulation")
         pin = self.pin 
+        press, release = (pin.drive_high, pin.drive_low) if self.pull_up else (pin.drive_low, pin.drive_high) # type: ignore
 
-        while not self._stop_simulation.wait(delay := random.uniform(5, 20)): # 5 - 20s between button presses
-            pin.drive_low() # type: ignore
+        while not self._simulation_thread.stopping.wait(delay := random.uniform(*self.SIM_PRESS_TIME_RANGE)):
+            press()
 
-            hold_for = random.uniform(.5, max(5, self.hold_time + .5)) # hold for .5 - 5 (or more if hold time is longer)
+            hold_for = random.uniform(*self.SIM_HOLD_DURATION_RANGE)
             time.sleep(hold_for)
             
-            pin.drive_high() # type: ignore
+            release()
+        
+        self._logger.debug("Simulation stopped")
+
+    def close(self):
+        if getattr(self, '_simulation_thread', None):
+            self._simulation_thread.stop()
+        
+        super().close()
 
 # TODO: Add pir and ultrasonic sensor simulators
 
@@ -110,3 +129,10 @@ class RGBLED(_ZeroRGBLED):
         super().value = value
 
 # endregion
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+
+    button = Button(1, pull_up=True)
+    time.sleep(15)
