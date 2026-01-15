@@ -21,7 +21,8 @@ __all__ = [
 # ---
     'Button', 
     'MotionSensor', 
-    'DistanceSensor',
+    'DistanceSensor', 
+    'MatrixKeypad',
 # ---
     'LED', 
     'RGBLED', 
