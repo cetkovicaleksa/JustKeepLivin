@@ -1,6 +1,6 @@
 [project]
 name = "gpiohero"
-version = "2026.1.0"
+version = "2026.1.1"
 description = "Adapter library for multiple raspberry pi libraries, with unified mocking and simulation. Made for an IoT project."
 readme = "README.md"
 authors = [

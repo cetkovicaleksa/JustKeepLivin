@@ -6,7 +6,7 @@
 # ]
 #
 # [tool.uv.sources]
-# gpiohero = { git = "https://github.com/cetkovicaleksa/justkeeplivin.git", subdirectory = "gpiohero" }
+# gpiohero = { git = "https://github.com/cetkovicaleksa/justkeeplivin.git", subdirectory = "gpiohero", rev = "8beb9fc" }
 # ///
 
 import argparse

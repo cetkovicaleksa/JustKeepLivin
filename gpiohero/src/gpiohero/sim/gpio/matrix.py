@@ -1,7 +1,7 @@
 __all__ = 'MatrixKeypad',
 
 from gpiozero.pins.mock import MockFactory
-from ..legit import MatrixKeypad as _HeroMatrixKeypad
+from ...legit.gpio import MatrixKeypad as _HeroMatrixKeypad
 
 import logging
 import time
