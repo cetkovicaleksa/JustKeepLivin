@@ -20,6 +20,8 @@ class MatrixKeypad(CompositeDevice):
         pull_up=True,
         pin_factory=None
     ):
+        assert labels is None or len(labels) == len(rows) and all(len(row) == len(cols) for row in labels)
+      
         self._rows = [
             OutputDevice(
                 row, 
@@ -85,7 +87,7 @@ if __name__ == "__main__":
     
     keypad = MatrixKeypad(
         rows="1234", 
-        cols="5678", 
+        cols="567", 
         labels=
         [
             "123", 

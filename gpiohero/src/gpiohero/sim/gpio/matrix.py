@@ -1,13 +1,12 @@
 __all__ = 'MatrixKeypad',
 
 from gpiozero.pins.mock import MockFactory
-from ...legit.gpio import MatrixKeypad as _HeroMatrixKeypad
+from gpiohero.legit.gpio import MatrixKeypad as _HeroMatrixKeypad
 
 import logging
-import time
 import random
 from itertools import cycle, chain
-from typing import Sequence, Union, Optional
+from typing import Sequence, Union, Optional, Iterable
 
 
 _mock_factory = MockFactory()
@@ -15,10 +14,10 @@ _mock_factory = MockFactory()
 
 
 class MatrixKeypad(_HeroMatrixKeypad):
-    SIM_TYPE_DELAY = 20
-    SIM_TYPE_INITIAL_DELAY = 2
-    SIM_TYPE_KEY_DELAY = .7
-    SIM_KEYS = None
+    SIM_TYPE_DELAY: float = 20
+    SIM_TYPE_INITIAL_DELAY: float = 2
+    SIM_TYPE_KEY_DELAY: float = .7
+    SIM_KEYS: Optional[Iterable[Union[str, None]]] = None
 
 
     def __init__(self,
@@ -55,7 +54,9 @@ class MatrixKeypad(_HeroMatrixKeypad):
             
             keys = cycle_labels()
 
-        time.sleep(self.SIM_TYPE_INITIAL_DELAY) 
+        if self._scan_thread.stopping.wait(self.SIM_TYPE_INITIAL_DELAY):
+            keys = []
+            
         for key_ in keys:
             if key_ is None:
                 if self._scan_thread.stopping.wait(self.SIM_TYPE_DELAY):
@@ -76,7 +77,8 @@ class MatrixKeypad(_HeroMatrixKeypad):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(level=logging.DEBUG)
+    import time
+    logging.basicConfig(level=logging.INFO)
 
     class Interfon(MatrixKeypad):
         SIM_TYPE_DELAY = 3
@@ -84,7 +86,7 @@ if __name__ == '__main__':
 
     with Interfon(
         rows="1234", 
-        cols="5678",
+        cols="567",
         labels=
             [
                 "123", 
@@ -93,5 +95,5 @@ if __name__ == '__main__':
                 "*0#"
             ]) as keypad:
         
-        # keypad.when_key = print
+        keypad.when_key = print
         time.sleep(15)

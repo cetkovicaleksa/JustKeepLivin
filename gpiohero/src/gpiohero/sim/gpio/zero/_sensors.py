@@ -15,10 +15,10 @@ _mock_factory = _MockFactory()
 
 
 class Button(_ZeroButton):
-    SIM_PRESS_TIME_RANGE = 2, 10
-    SIM_HOLD_DURATION_RANGE = .5, 2
-    SIM_MSG_PRESSED = "Pressed"
-    SIM_MSG_RELEASED = "Released"
+    SIM_PRESS_TIME_RANGE: tuple[float, float] = 2, 10
+    SIM_HOLD_DURATION_RANGE: tuple[float, float] = .5, 2
+    SIM_MSG_PRESSED: str = "Pressed"
+    SIM_MSG_RELEASED: str = "Released"
 
     def __init__(self, pin=None, *, pull_up=True, active_state=None, bounce_time=None, hold_time=1, hold_repeat=False, pin_factory=None):
         super().__init__(pin, pull_up=pull_up, active_state=active_state, bounce_time=bounce_time, hold_time=hold_time, hold_repeat=hold_repeat, pin_factory=_mock_factory)

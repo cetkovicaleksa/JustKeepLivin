@@ -11,8 +11,8 @@ _mock_factory = _MockFactory()
 
 
 class LED(_ZeroLED):
-    SIM_MSG_ON = '[ON]'
-    SIM_MSG_OFF = '[OFF]'
+    SIM_MSG_ON: str = '[ON]'
+    SIM_MSG_OFF: str = '[OFF]'
 
     def __init__(self, pin=None, *, active_high=True, initial_value=False, pin_factory=None):
         super().__init__(pin, active_high=active_high, initial_value=initial_value, pin_factory=_mock_factory)
@@ -28,8 +28,8 @@ class LED(_ZeroLED):
 
 
 class Buzzer(_ZeroBuzzer):
-    SIM_MSG_ON = '[ON]'
-    SIM_MSG_OFF = '[OFF]'
+    SIM_MSG_ON: str = '[ON]'
+    SIM_MSG_OFF: str = '[OFF]'
 
     def __init__(self, pin=None, *, active_high=True, initial_value=False, pin_factory=None):
         super().__init__(pin, active_high=active_high, initial_value=initial_value, pin_factory=_mock_factory)
