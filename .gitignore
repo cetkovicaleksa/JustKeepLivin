@@ -1,0 +1,6 @@
+# Virtual environments
+.venv
+
+# Enviroment files
+*.env
+!*.env.dev

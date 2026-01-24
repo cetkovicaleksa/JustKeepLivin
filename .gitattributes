@@ -1,1 +1,9 @@
+* text=auto eol=lf
+
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf
+
+*.{py,pyi,md,toml} text
+*.lock -text
+
 docs/schematics/* filter=lfs diff=lfs merge=lfs -text
