@@ -1,0 +1,27 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "[DEV] Docker compose up",
+            "type": "shell",
+            "command": "docker",
+            "args": ["compose", "up", "-d"],
+            "options": {
+                "cwd": "${workspaceFolder}/docker"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "[DEV] Docker compose down",
+            "type": "shell",
+            "command": "docker",
+            "args": ["compose", "down"],
+            "options": {
+                "cwd": "${workspaceFolder}/docker"
+            },
+            "problemMatcher": []
+        }
+    ]
+}
