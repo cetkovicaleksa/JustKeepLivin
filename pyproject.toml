@@ -15,3 +15,43 @@ members = [
 
 [tool.uv.sources]
 gpiohero = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.14",
+]
+
+[tool.ruff]
+target-version = "py310"
+
+[tool.ruff.lint]
+# Source: https://chat.openai.com
+# Focus on Python errors, runtime issues, type hints, and version compatibility
+select = [
+    "E9",    # Syntax errors & undefined names
+    "F",     # Pyflakes runtime checks
+    "B",     # Bugbear: potential bugs & version-sensitive issues
+    "YTT",   # Type hints incompatible with target Python
+    "UP",    # Pyupgrade: modern syntax checks (does NOT auto-fix unless you run --fix)
+    "FURB",  # Refactors for better compatibility
+    "ISC"    # Import system checks (cross-version import safety)
+]
+
+# Ignore style, docstrings, naming, formatting, and * import warnings
+ignore = [
+    "E",        # PEP8 style errors
+    "W",        # Warnings
+    "D",        # Docstring rules
+    "N",        # Naming conventions
+    "ANN",      # Type annotation style
+    "COM",      # Comments formatting
+    "Q",        # Quotes / string formatting
+    "TID",      # Tidying rules
+    "ARG",      # Function argument style
+    "PL",       # Complexity / design issues
+    "SIM",      # Similarity / refactor suggestions
+    "RUF",      # Ruff-specific unrelated rules
+    "F403",     # from * import
+    "F405",      # undefined names from * import,
+    "F401",     # unused import
+]
