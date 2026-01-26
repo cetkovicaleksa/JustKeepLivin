@@ -1,0 +1,58 @@
+name: justkeeplivin-dev
+
+services:
+  mosquitto:
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+
+  influxdb2:
+    restart: unless-stopped
+    ports:
+      - "8086:8086"
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminpass
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: very-secure-admin-token-indeed
+      DOCKER_INFLUXDB_INIT_ORG: io.github.cetkovicaleksa
+      DOCKER_INFLUXDB_INIT_BUCKET: justkeeplivin
+
+  grafana:
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: adminpass
+    depends_on: [influxdb2]
+
+configs:
+  mosquitto-conf: 
+    content: |
+      allow_anonymous true
+      listener 1883
+      listener 9001
+      protocol websockets
+      persistence true
+      persistence_file mosquitto.db
+      persistence_location /mosquitto/data/
+      log_dest file /mosquitto/log/mosquitto.log
+
+  grafana-sources:
+    content: |
+      apiVersion: 1
+
+      datasources:
+        - name: InfluxDB2
+          type: influxdb
+          access: proxy
+          url: http://influxdb2:8086
+          isDefault: true
+          jsonData:
+            version: Flux
+            organization: io.github.cetkovicaleksa
+            defaultBucket: justkeeplivin
+          secureJsonData:
+            token: very-secure-admin-token-indeed

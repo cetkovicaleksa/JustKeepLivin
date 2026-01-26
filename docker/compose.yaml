@@ -1,0 +1,49 @@
+# TODO: add explanatory comment header
+# https://docs.influxdata.com/influxdb/v2/install/use-docker-compose/
+# https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/
+# https://grafana.com/docs/grafana/latest/datasources/influxdb/configure-influxdb-data-source/
+
+name: justkeeplivin
+
+services:
+  # https://github.com/eclipse-mosquitto/mosquitto/blob/v2.0.22/docker/2.0-openssl/Dockerfile
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    expose: [
+      "1883", # MQTT via TCP
+      "9001" # MQTT via Websocket
+    ]
+    configs:
+      - source: mosquitto-conf
+        target: /mosquitto/config/mosquitto.conf
+    volumes:
+      - mosquitto-data:/mosquitto/data:rw
+    networks: 
+      - jkl-net
+
+  # https://github.com/influxdata/influxdata-docker/blob/a501127168426f260dd1b2a6281f0be8a9a605bd/influxdb/2.8/Dockerfile
+  influxdb2:
+    image: influxdb:2.8
+    expose: ["8086"]
+    volumes:
+      - influxdb-data:/var/lib/influxdb2:rw
+    networks: 
+      - jkl-net
+
+  # https://github.com/grafana/grafana/blob/v12.3.1/Dockerfile
+  # https://grafana.com/grafana/download/12.3.1?platform=docker&edition=oss
+  grafana:
+    image: grafana/grafana:12.3
+    expose: ["3000"]
+    configs:
+      - source: grafana-sources
+        target: /etc/grafana/provisioning/datasources/custom.yaml
+    networks: 
+      - jkl-net
+
+networks:
+  jkl-net:
+
+volumes:
+  mosquitto-data:
+  influxdb-data:
