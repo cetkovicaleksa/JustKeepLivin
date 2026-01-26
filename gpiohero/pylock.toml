@@ -2,7 +2,7 @@
 #    uv export --package gpiohero --format pylock.toml
 lock-version = "1.0"
 created-by = "uv"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 
 [[packages]]
 name = "colorzero"
@@ -23,32 +23,8 @@ sdist = { url = "https://files.pythonhosted.org/packages/e4/47/334b8db8a981eca9a
 wheels = [{ url = "https://files.pythonhosted.org/packages/02/eb/6518a1b00488d48995034226846653c382d676cf5f04be62b3c3fae2c6a1/gpiozero-2.0.1-py3-none-any.whl", upload-time = 2024-02-15T11:07:00Z, size = 150818, hashes = { sha256 = "8f621de357171d574c0b7ea0e358cb66e560818a47b0eeedf41ce1cdbd20c70b" } }]
 
 [[packages]]
-name = "importlib-metadata"
-version = "4.13.0"
-marker = "python_full_version < '3.10'"
-index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/55/12/ab288357b884ebc807e3f4eff63ce5ba6b941ba61499071bf19f1bbc7f7f/importlib_metadata-4.13.0.tar.gz", upload-time = 2022-10-01T17:09:15Z, size = 50445, hashes = { sha256 = "dd0173e8f150d6815e098fd354f6414b0f079af4644ddfe90c71e2fc6174346d" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/d0/98/c277899f5aa21f6e6946e1c83f2af650cbfee982763ffb91db07ff7d3a13/importlib_metadata-4.13.0-py3-none-any.whl", upload-time = 2022-10-01T17:09:13Z, size = 23010, hashes = { sha256 = "8a8a81bcf996e74fee46f0d16bd3eaa382a7eb20fd82445c3ad11f4090334116" } }]
-
-[[packages]]
-name = "importlib-resources"
-version = "5.13.0"
-marker = "python_full_version < '3.10'"
-index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/a5/f1/8711c49ffd121083007a24c1bff0d324c9ff621d4fdf8b4ffcb8d9e60330/importlib_resources-5.13.0.tar.gz", upload-time = 2023-07-07T16:21:00Z, size = 36550, hashes = { sha256 = "82d5c6cca930697dbbd86c93333bb2c2e72861d4789a11c2662b933e5ad2b528" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/7a/68/bd9dd6bbf06772c7accce77d0354d783333fbe712a60b08fc13540c05422/importlib_resources-5.13.0-py3-none-any.whl", upload-time = 2023-07-07T16:20:58Z, size = 32912, hashes = { sha256 = "9f7bd0c97b79972a6cce36a366356d16d5e13b09679c11a58f1014bfdf8e64b2" } }]
-
-[[packages]]
 name = "setuptools"
-version = "80.10.1"
+version = "80.10.2"
 index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/86/ff/f75651350db3cf2ef767371307eb163f3cc1ac03e16fdf3ac347607f7edb/setuptools-80.10.1.tar.gz", upload-time = 2026-01-21T09:42:03Z, size = 1229650, hashes = { sha256 = "bf2e513eb8144c3298a3bd28ab1a5edb739131ec5c22e045ff93cd7f5319703a" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/e0/76/f963c61683a39084aa575f98089253e1e852a4417cb8a3a8a422923a5246/setuptools-80.10.1-py3-none-any.whl", upload-time = 2026-01-21T09:42:00Z, size = 1099859, hashes = { sha256 = "fc30c51cbcb8199a219c12cc9c281b5925a4978d212f84229c909636d9f6984e" } }]
-
-[[packages]]
-name = "zipp"
-version = "3.23.0"
-marker = "python_full_version < '3.10'"
-index = "https://pypi.org/simple"
-sdist = { url = "https://files.pythonhosted.org/packages/e3/02/0f2892c661036d50ede074e376733dca2ae7c6eb617489437771209d4180/zipp-3.23.0.tar.gz", upload-time = 2025-06-08T17:06:39Z, size = 25547, hashes = { sha256 = "a07157588a12518c9d4034df3fbbee09c814741a33ff63c05fa29d26a2404166" } }
-wheels = [{ url = "https://files.pythonhosted.org/packages/2e/54/647ade08bf0db230bfea292f893923872fd20be6ac6f53b2b936ba839d75/zipp-3.23.0-py3-none-any.whl", upload-time = 2025-06-08T17:06:38Z, size = 10276, hashes = { sha256 = "071652d6115ed432f5ce1d34c336c0adfd6a884660d1e9712a256d3d3bd4b14e" } }]
+sdist = { url = "https://files.pythonhosted.org/packages/76/95/faf61eb8363f26aa7e1d762267a8d602a1b26d4f3a1e758e92cb3cb8b054/setuptools-80.10.2.tar.gz", upload-time = 2026-01-25T22:38:17Z, size = 1200343, hashes = { sha256 = "8b0e9d10c784bf7d262c4e5ec5d4ec94127ce206e8738f29a437945fbc219b70" } }
+wheels = [{ url = "https://files.pythonhosted.org/packages/94/b8/f1f62a5e3c0ad2ff1d189590bfa4c46b4f3b6e49cef6f26c6ee4e575394d/setuptools-80.10.2-py3-none-any.whl", upload-time = 2026-01-25T22:38:15Z, size = 1064234, hashes = { sha256 = "95b30ddfb717250edb492926c92b5221f7ef3fbcc2b07579bcd4a27da21d0173" } }]

@@ -1,0 +1,17 @@
+[project]
+name = "justkeeplivin"
+version = "2026.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "gpiohero",
+]
+
+[tool.uv.workspace]
+members = [
+    "gpiohero",
+]
+
+[tool.uv.sources]
+gpiohero = { workspace = true }

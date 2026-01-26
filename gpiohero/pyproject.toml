@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Алекса Ћетковић", email = "cetkovic.sv77.2022@uns.ac.rs" }
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "gpiozero>=2.0.1",
 ]
