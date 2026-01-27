@@ -5,12 +5,15 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "gpiohero",
+    "flask>=3.1.2",
+    "flask-mqtt>=1.3.0",
+    "influxdb-client>=1.50.0",
 ]
 
 [tool.uv.workspace]
 members = [
-    "gpiohero",
+    "justkeeplivin",
+    "gpiohero"
 ]
 
 [tool.uv.sources]
@@ -18,8 +21,16 @@ gpiohero = { workspace = true }
 
 [dependency-groups]
 dev = [
+    "gpiohero",
     "ruff>=0.14.14",
 ]
+
+[project.scripts]
+jkl = "justkeeplivin.cli:main"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 target-version = "py310"
