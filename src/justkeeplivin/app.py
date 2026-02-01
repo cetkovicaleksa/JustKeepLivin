@@ -1,10 +1,8 @@
 import os
 from pathlib import Path
 from flask import Flask
-from itertools import chain
 
 from .routes import routes
-from .api import api
 from .x import init_extensions
 
 
@@ -13,16 +11,13 @@ def create_app():
     load_config(app)
     init_extensions(app)
 
-    for bp in chain(routes, api):
+    for bp in routes:
         app.register_blueprint(bp)
 
     return app
 
 def load_config(app: Flask):
-    if not (cfg := os.getenv('JKL_CONFIG', None)):
-        return
-
-    cfg = Path(cfg)
+    cfg = Path(os.getenv('JKL_CONFIG', app.instance_path + "/config.py"))
     match cfg.suffix.lower():
         case '.toml':
             ...

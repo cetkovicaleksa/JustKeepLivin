@@ -38,6 +38,12 @@ configs:
       persistence true
       persistence_file mosquitto.db
       persistence_location /mosquitto/data/
+      log_type error
+      log_type warning
+      log_type notice
+      log_type information
+      log_type debug
+      log_timestamp true
       log_dest file /mosquitto/log/mosquitto.log
 
   grafana-sources:
