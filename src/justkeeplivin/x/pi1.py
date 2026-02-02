@@ -49,6 +49,7 @@ def init_app(app: Flask):
                 .tag("location", "porch")
                 .tag("simulated", data["simulated"])
                 .field("distance", data["distance"]) # meters (see if it could be like 2m or 20cm)
+                .field("in_range", data["in_range"])
             )
 
     @mqtt.on_topic("home/porch/typing")

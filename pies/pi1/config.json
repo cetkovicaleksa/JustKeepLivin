@@ -1,0 +1,37 @@
+{
+  "name": "PI1",
+  "simulated": true,
+
+  "ds1": {
+    "name": "DS1",
+    "pin": 17
+  },
+
+  "dl": {
+    "name": "DL",
+    "pin": 18
+  },
+
+  "db": {
+    "name": "DB",
+    "pin": 13
+  },
+
+  "dpir1": {
+    "name": "DPIR1",
+    "pin": 27
+  },
+
+  "dus1": {
+    "name": "DUS1",
+    "trig": 24,
+    "echo": 25
+  },
+
+  "dms": {
+    "name": "DMS",
+    "rows": [8, 7, 1, 12],
+    "cols": [16, 20, 21, 26],
+    "labels": ["123A", "456B", "789C", "*0#D"]
+  }
+}

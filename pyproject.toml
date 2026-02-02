@@ -13,7 +13,8 @@ dependencies = [
 [tool.uv.workspace]
 members = [
     "justkeeplivin",
-    "gpiohero"
+    "gpiohero",
+    "pies/*",
 ]
 
 [tool.uv.sources]
@@ -21,7 +22,7 @@ gpiohero = { workspace = true }
 
 [dependency-groups]
 dev = [
-    "gpiohero",
+    # "gpiohero",
     "ruff>=0.14.14",
 ]
 

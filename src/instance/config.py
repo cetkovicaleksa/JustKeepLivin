@@ -1,6 +1,8 @@
 # very secure config, indeed
 
-# use mqtt defaults
+MQTT_CLIENT_ID = "justkeeplivin"
+MQTT_BROKER_URL = "localhost"
+MQTT_BROKER_PORT = 1883
 
 INFLUX_URL = "http://localhost:8086"
 INFLUX_TOKEN = "very-secure-admin-token-indeed"

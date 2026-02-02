@@ -44,7 +44,7 @@ configs:
       log_type information
       log_type debug
       log_timestamp true
-      log_dest file /mosquitto/log/mosquitto.log
+      # log_dest file /mosquitto/log/mosquitto.log
 
   grafana-sources:
     content: |
