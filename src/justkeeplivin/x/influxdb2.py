@@ -17,11 +17,11 @@ def write(point: Point, bucket: str | None = None):
         record=point
     )
 
-def query(query: str, **params) -> TableList:
+def query(query_: str, **params) -> TableList:
     assert query_api, "InfluxDb not initialized. Call init_app()"
 
     return query_api.query(
-        query,
+        query_,
         **params
     )
 

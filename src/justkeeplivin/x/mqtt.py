@@ -1,27 +1,47 @@
-from flask import Flask
+import json
+from json import JSONDecodeError
+from typing import Any, Dict, Literal
+
 from flask_mqtt import Mqtt
-from collections.abc import Iterable
-from itertools import repeat, chain
-from threading import Lock
+from paho.mqtt.client import Client, MQTTMessage as Message, ConnectFlags, DisconnectFlags, CallbackOnMessage
 
 mqtt = Mqtt()
 init_app = mqtt.init_app
 
-_topics = set()
-_topic_lock = Lock()
-
-def add_topics(*topics: str, qos: int | Iterable[int] = 0):
-    with _topic_lock:
-        for topic, qos_ in zip(topics, repeat(qos) if isinstance(qos, int) else chain(qos, repeat(0))):
-            _topics.add((topic, qos_))
-            mqtt.subscribe(topic, qos_) # fails without throwing if not connected
-
 @mqtt.on_connect()
-def handle_connect(client: Mqtt, userdata, flags, rc):
-    with _topic_lock:
-        for topic, qos in _topics:
-            client.subscribe(topic, qos)
+def _handle_connect(client: Client, userdata: Any, flags: Dict[str, Any], rc: int): ...
 
 @mqtt.on_disconnect()
-def handle_disconnect(*args, **kwargs):
-    pass
+def _handle_disconnect(client: Client, userdata: Any, rc: int): ...
+
+def try_parse_message(message: Message | bytes, encoding="utf-8", format_: Literal["json"] = "json") -> dict | None:
+    payload = message.payload if isinstance(message, Message) else message
+    try:
+        decoded = payload.decode(encoding)
+        match format_:
+            case "json" | "JSON":
+                return json.loads(decoded)
+            case _:
+                raise ValueError("Unsupported format: " + format_)
+    except (UnicodeDecodeError, JSONDecodeError) as e:
+        return None
+
+# class JsonMessage(Message, ABC):
+#     @property
+#     @abstractmethod
+#     def json(self) -> dict | None: ...
+#
+# def on_json_topic(topic):
+#     def decorator(handler):
+#         @wraps(handler)
+#         def wrapper(client, userdata, message):
+#             try:
+#                 data = json.loads(message.payload.decode("utf-8"))
+#             except (UnicodeDecodeError, JSONDecodeError) as e:
+#                 return None
+#             else:
+#                 message.json = data
+#                 handler(client, userdata, message)
+#
+#         return mqtt.on_topic(topic)(wrapper)
+#     return decorator

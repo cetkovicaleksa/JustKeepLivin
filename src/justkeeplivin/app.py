@@ -2,8 +2,10 @@ import os
 from pathlib import Path
 from flask import Flask
 
-from .routes import routes
+from .routes import main
+from .api import api
 from .x import init_extensions
+from .telemetry import init_app as init_telemetry
 
 
 def create_app():
@@ -11,9 +13,10 @@ def create_app():
     load_config(app)
     init_extensions(app)
 
-    for bp in routes:
+    for bp in [main, api]:
         app.register_blueprint(bp)
 
+    init_telemetry(app)
     return app
 
 def load_config(app: Flask):
