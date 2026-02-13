@@ -1,9 +1,12 @@
 import json
+import logging
 from json import JSONDecodeError
 from typing import Any, Dict, Literal
 
 from flask_mqtt import Mqtt
 from paho.mqtt.client import Client, MQTTMessage as Message, ConnectFlags, DisconnectFlags, CallbackOnMessage
+
+_logger = logging.getLogger(__name__)
 
 mqtt = Mqtt()
 init_app = mqtt.init_app
@@ -13,6 +16,19 @@ def _handle_connect(client: Client, userdata: Any, flags: Dict[str, Any], rc: in
 
 @mqtt.on_disconnect()
 def _handle_disconnect(client: Client, userdata: Any, rc: int): ...
+
+@mqtt.on_message()
+def _handle_unhandled_message(client: Client, userdata: object, message: Message):
+    _logger.warning(
+        "Unhandled MQTT message",
+        extra={
+            "host": client.host,
+            "userdata": userdata,
+            "topic": message.topic,
+            "qos": message.qos,
+            "payload": try_parse_message(message)
+        }
+    )
 
 def try_parse_message(message: Message | bytes, encoding="utf-8", format_: Literal["json"] = "json") -> dict | None:
     payload = message.payload if isinstance(message, Message) else message

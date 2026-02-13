@@ -22,7 +22,6 @@ client = mqtt.Client(
     client_id=config.name,
     protocol=MQTTProtocolVersion.MQTTv5
 )
-client.on_connect = lambda client, userdata, flags, rc, prop: client.subscribe("cmd/home/porch/+")
 
 
 def shutdown():
@@ -83,6 +82,7 @@ def main():
     import warnings
     warnings.filterwarnings('ignore') # ignore gpiozero, use pigpio and no echo detected for simulators warnings
     logging.basicConfig(level=logging.DEBUG)
+    client.on_connect = lambda client, userdata, flags, rc, prop: client.subscribe("cmd/home/porch/+")
 
     with (
         DoorSensor(config) as ds1,
@@ -138,7 +138,7 @@ def door_sensor_changed(button):
     data_queue.put((
         "home/porch/door",
         json.dumps({
-            "state": "closed" if button.is_pressed else "opened",
+            "open": not button.is_pressed,
             "simulated": config.simulated or config.ds1.simulated,
         })
     ))

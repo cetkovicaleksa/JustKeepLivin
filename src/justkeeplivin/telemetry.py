@@ -11,6 +11,7 @@ topics = [
     ("home/+/typing", 0),
     ("home/+/gyro", 0),
     ("home/+/remote", 0),
+    ("home/+/timer", 0),
 ]
 
 def init_app(app):
@@ -31,7 +32,7 @@ def on_door_message(client: Client, userdata: object, message: Message):
             Point("door")
             .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
-            .field("state", data["state"]) # open/closed
+            .field("open", data["open"])
         )
 
 @mqtt.on_topic("home/+/motion")
@@ -43,7 +44,7 @@ def on_motion_message(client: Client, userdata: object, message: Message):
             Point("motion")
             .tag(KEY_LOCATION, location)
             .tag(KEY_SIMULATED, _is_simulated(data))
-            .field("detected", data["detected"]) # true/false
+            .field("detected", data["detected"])
         )
 
 @mqtt.on_topic("home/+/proximity")
@@ -107,6 +108,18 @@ def on_gyro_message(client: Client, userdata: object, message: Message):
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("accel", accel := cast(dict, data["accel"]))
             .field("gyro", data["gyro"])
-            .field("magnitude", magnitude := sum(xi**2 for xi in accel.values())**-2)
+            .field("magnitude", magnitude := sum(xi**2 for xi in accel.values())**1/2)
             .field("significant_movement", magnitude > 0.5) # g
+        )
+
+@mqtt.on_topic("home/+/timer")
+def on_timer_message(client: Client, userdata: object, message: Message):
+    location = message.topic.split('/')[1]
+
+    if data := try_parse_message(message):
+        write(
+            Point("timer")
+            .tag(KEY_LOCATION, location)
+            .tag(KEY_SIMULATED, _is_simulated(data))
+            .field("event", data["event"]) # reset | expired (maybe also set new timer delay confirmation "set")
         )
