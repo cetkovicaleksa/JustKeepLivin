@@ -7,7 +7,8 @@
 
 # if _MOCK is not None:
 #     _logger.info("`GPIOHERO_MOCK` env variable is set, all devices will be mocked.")
-    
+
 #     # <https://gpiozero.readthedocs.io/en/stable/api_pins.html#mock-pins>
 #     os.environ['GPIOZERO_PIN_FACTORY'] = 'mock'
 
+__author__ = "Алекса Ћетковић"

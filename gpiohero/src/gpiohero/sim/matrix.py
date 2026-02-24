@@ -1,7 +1,9 @@
-__all__ = 'MatrixKeypad',
+__all__ = [
+    "MatrixKeypad",
+]
 
 from gpiozero.pins.mock import MockFactory
-from gpiohero.legit.gpio import MatrixKeypad as _HeroMatrixKeypad
+from gpiohero.legit import MatrixKeypad as _HeroMatrixKeypad
 
 import logging
 import random
@@ -14,9 +16,9 @@ _mock_factory = MockFactory()
 
 
 class MatrixKeypad(_HeroMatrixKeypad):
-    SIM_TYPE_DELAY: float = 20
-    SIM_TYPE_INITIAL_DELAY: float = 2
-    SIM_TYPE_KEY_DELAY: float = .7
+    SIM_TYPE_DELAY: float = .7
+    SIM_PAUSE_DELAY: float = 20
+    SIM_INITIAL_DELAY: float = 2
     SIM_KEYS: Optional[Iterable[Union[str, None]]] = None
 
 
@@ -51,32 +53,29 @@ class MatrixKeypad(_HeroMatrixKeypad):
                     random.shuffle(labels)
                     for label in labels:
                         yield label if random.random() > .2 else None
-            
+
             keys = cycle_labels()
 
-        if self._scan_thread.stopping.wait(self.SIM_TYPE_INITIAL_DELAY):
+        if self._scan_thread.stopping.wait(self.SIM_INITIAL_DELAY):
             keys = []
-            
+
         for key_ in keys:
             if key_ is None:
-                if self._scan_thread.stopping.wait(self.SIM_TYPE_DELAY):
+                if self._scan_thread.stopping.wait(self.SIM_PAUSE_DELAY):
                     break
                 continue
-            
+
+            self._logger.debug("Key pressed: '%s'", key_)
             if getattr(self, 'when_key', None):
-                self._logger.debug("Key pressed: '%s'", key_)
                 self.when_key(key_) # type: ignore
-            else:
-                self._logger.warning("Key pressed: '%s' [no handler attached]", key_)
-            
-            if self._scan_thread.stopping.wait(self.SIM_TYPE_KEY_DELAY):
+
+            if self._scan_thread.stopping.wait(self.SIM_TYPE_DELAY):
                 break
-        
+
         self._logger.debug("Simulation stopped")
 
 
-
-if __name__ == '__main__':
+def main():
     import time
     logging.basicConfig(level=logging.INFO)
 
@@ -85,15 +84,18 @@ if __name__ == '__main__':
         SIM_KEYS = chain("1402", [None], "003", [None], "aki")
 
     with Interfon(
-        rows="1234", 
+        rows="1234",
         cols="567",
         labels=
             [
-                "123", 
-                "456", 
-                "789", 
+                "123",
+                "456",
+                "789",
                 "*0#"
             ]) as keypad:
-        
+
         keypad.when_key = print
         time.sleep(15)
+
+if __name__ == '__main__':
+    main()
