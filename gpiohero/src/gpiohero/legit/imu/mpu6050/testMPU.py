@@ -1,6 +1,6 @@
 __author__ = 'Geir'
 
-from MPU6050 import MPU6050
+from . import MPU6050
 from time import clock
 
 mpu = mpu = MPU6050(1, 0x68, -5489, -1441, 1305, -2, -72, -5, True)

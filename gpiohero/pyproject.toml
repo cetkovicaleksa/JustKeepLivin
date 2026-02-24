@@ -3,6 +3,7 @@ name = "gpiohero"
 version = "2026.1.1"
 description = "Adapter library for multiple raspberry pi libraries, with unified mocking and simulation. Made for an IoT project."
 readme = "README.md"
+license-files = ["**/LICEN[CS]E*"]
 authors = [
     { name = "Алекса Ћетковић", email = "cetkovic.sv77.2022@uns.ac.rs" }
 ]
@@ -12,8 +13,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-rpi-gpio = [
+legit = [
     "rpi-gpio>=0.7.1",
+    "smbus",
 ]
 
 [build-system]

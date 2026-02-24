@@ -1,7 +1,6 @@
 import time
-from MPU6050 import MPU6050
-from MPU6050 import MPU6050IRQHandler
-import Adafruit_BBIO.GPIO as GPIO
+from . import MPU6050, MPU6050IRQHandler
+import RPi.GPIO as GPIO # import Adafruit_BBIO.GPIO as GPIO
 
 i2c_bus = 1
 device_address = 0x68
