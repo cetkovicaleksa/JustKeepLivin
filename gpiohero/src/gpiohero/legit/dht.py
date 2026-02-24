@@ -1,3 +1,7 @@
+__all__ = [
+    "DHT11",
+]
+
 import time
 import logging
 import RPi.GPIO as GPIO
@@ -18,7 +22,7 @@ class DHT11:
 
     when_measure: Callable[[dict,], None] | None
 
-    def __init__(self, pin: int, sample_interval = .5):
+    def __init__(self, pin: int, sample_interval: float = 1):
         self.pin = pin
         self._bits = [0,0,0,0,0]
         GPIO.setmode(GPIO.BCM)
