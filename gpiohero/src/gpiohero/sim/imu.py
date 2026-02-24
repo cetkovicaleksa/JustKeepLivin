@@ -52,9 +52,9 @@ class MPU:
 
 
     def close(self):
-        listening_thread: GPIOThread
-        if listening_thread := getattr(self, '_listening_thread', None):
-            listening_thread.stop()
+        simulator_thread: GPIOThread
+        if simulator_thread := getattr(self, '_simulator_thread', None):
+            simulator_thread.stop()
 
     def __enter__(self):
         return self

@@ -62,9 +62,9 @@ class MPU:
                 ))
 
     def close(self):
-        listening_thread: GPIOThread
-        if listening_thread := getattr(self, '_listening_thread', None):
-            listening_thread.stop()
+        polling_thread: GPIOThread
+        if polling_thread := getattr(self, '_polling_thread', None):
+            polling_thread.stop()
 
         # cleanup??
 
