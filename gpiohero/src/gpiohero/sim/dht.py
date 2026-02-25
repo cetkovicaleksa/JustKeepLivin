@@ -33,7 +33,7 @@ class DHT11:
                 temperature = max(-273.15, temperature + random.uniform(-self.SIM_TEMP_FLUX, self.SIM_TEMP_FLUX))
                 humidity = min(100, max(0, humidity + random.uniform(-self.SIM_HUM_FLUX, self.SIM_HUM_FLUX)))
 
-                self._logger.debug("Temperature: %.2f°c Humidity: %.2f%%", temperature, humidity)
+                self._logger.debug("Temperature: %.2f℃ Humidity: %.2f%%", temperature, humidity)
                 when_measure({
                     "temperature": temperature,
                     "humidity": humidity,

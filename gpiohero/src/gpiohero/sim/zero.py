@@ -17,6 +17,9 @@ from gpiozero import (
     LED as _ZeroLED,
     Buzzer as _ZeroBuzzer,
     RGBLED as _ZeroRGBLED,
+    LEDCharDisplay as _ZeroLEDCharDisplay,
+    LEDMultiCharDisplay as _ZeroLEDMultiCharDisplay,
+    Device,
 )
 from gpiozero.threads import GPIOThread
 from gpiozero.pins.mock import MockFactory as _MockFactory
@@ -136,7 +139,50 @@ class RGBLED(_ZeroRGBLED):
         if self.value != value:
             self._logger.info("[%s]", self.color)
 
-        super().value = value
+        # super().value = value
+        _ZeroRGBLED.value.fset(self, value)
+
+
+@wraps(_ZeroLEDCharDisplay)
+def LEDCharDisplay(*pins, dp=None, font=None, pwm=False, active_high=True, initial_value=" ", pin_factory=None):
+    return _ZeroLEDCharDisplay(*pins, dp=dp, font=font, pwm=pwm, active_high=active_high, initial_value=initial_value, pin_factory=_mock_factory)
+
+# NOTE: There is a problem when simulating a gpiozero LEDMultiCharDisplay in its __init__ method.
+# The plex CompositeOutputDevice is constructed without passing it the given pin_factory, so it always falls back to default pin factory.
+# This fails if you want to make a mocked device
+
+# class LedMultiCharDisplay(_ZeroLEDMultiCharDisplay):
+
+#     def __init__(self, char, *pins, active_high=True, initial_value=None, pin_factory=None):
+#         self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
+#         super().__init__(char, *pins, active_high=active_high, initial_value=initial_value, pin_factory=_mock_factory)
+
+
+#     @property
+#     def value(self):
+#         return super().value
+
+#     @value.setter
+#     def value(self, value):
+#         _ZeroLEDMultiCharDisplay.value.fset(self, value)
+#         self._logger.info("[ %s ]", ''.join(self.value)) # cannot display .
+
+class LEDMultiCharDisplay(Device):
+
+    def __init__(self, char, *pins, active_high=True, initial_value=None, pin_factory=None):
+        super().__init__(pin_factory=_mock_factory)
+
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
+    @property
+    def value(self):
+        return ()
+
+    @value.setter
+    def value(self, value):
+        self._logger.info("[ %s ]", "".join(value))
+
 
 #endregion
 
@@ -144,8 +190,17 @@ def main():
     import time
     logging.basicConfig(level=logging.DEBUG)
 
-    button = Button(1, pull_up=True)
-    time.sleep(15)
+    with (
+        Button(0) as button,
+        LEDCharDisplay(1, 2, 3, 4, 5, 6, 7) as c,
+        LEDMultiCharDisplay(c, 9, 10, 11, 12) as d
+    ):
+
+        def button_changed(btn):
+            d.value = "1111" if btn.is_active else "0000"
+
+        button.when_activated = button.when_deactivated = button_changed
+        time.sleep(15)
 
 if __name__ == "__main__":
     main()
