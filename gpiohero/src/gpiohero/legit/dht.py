@@ -4,7 +4,10 @@ __all__ = [
 
 import time
 import logging
-import RPi.GPIO as GPIO
+try:
+    import RPi.GPIO as GPIO
+except ImportError as e:
+    print(e.msg) # idk what else
 from enum import IntEnum
 from itertools import count
 from typing import Callable

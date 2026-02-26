@@ -35,9 +35,9 @@ class Button(_ZeroButton):
     SIM_MSG_RELEASED: str = "Released"
 
     def __init__(self, pin=None, *, pull_up=True, active_state=None, bounce_time=None, hold_time=1, hold_repeat=False, pin_factory=None):
+        self._logger = logging.getLogger(f"{self.__class__.__name__}@{pin}")
         super().__init__(pin, pull_up=pull_up, active_state=active_state, bounce_time=bounce_time, hold_time=hold_time, hold_repeat=hold_repeat, pin_factory=_mock_factory)
 
-        self._logger = logging.getLogger(f"{self.__class__.__name__}@{self.pin}")
 
         self._simulation_thread = GPIOThread(self._simulator)
         self._simulation_thread.start()
@@ -91,9 +91,9 @@ class LED(_ZeroLED):
     SIM_MSG_OFF: str = '[OFF]'
 
     def __init__(self, pin=None, *, active_high=True, initial_value=False, pin_factory=None):
+        self._logger = logging.getLogger(f"{self.__class__.__name__}@{pin}")
         super().__init__(pin, active_high=active_high, initial_value=initial_value, pin_factory=_mock_factory)
 
-        self._logger = logging.getLogger(f"{self.__class__.__name__}@{self.pin}")
 
     def _write(self, value):
         old_state = self.pin.state # type: ignore
@@ -108,9 +108,9 @@ class Buzzer(_ZeroBuzzer):
     SIM_MSG_OFF: str = '[OFF]'
 
     def __init__(self, pin=None, *, active_high=True, initial_value=False, pin_factory=None):
+        self._logger = logging.getLogger(f"{self.__class__.__name__}@{pin}")
         super().__init__(pin, active_high=active_high, initial_value=initial_value, pin_factory=_mock_factory)
 
-        self._logger = logging.getLogger(f"{self.__class__.__name__}@{self.pin}")
 
     def _write(self, value):
         old_state = self.pin.state # type: ignore
@@ -123,12 +123,14 @@ class Buzzer(_ZeroBuzzer):
 class RGBLED(_ZeroRGBLED):
 
     def __init__(self, red=None, green=None, blue=None, *, active_high=True, initial_value=..., pwm=True, pin_factory=None):
+        self._logger = logging.getLogger(f"{self.__class__.__name__}")
+
         super().__init__(red, green, blue, active_high=active_high, initial_value=initial_value, pwm=pwm, pin_factory=_mock_factory)
 
         pins = zip(['red', 'green', 'blue'], map(lambda l: l.pin, self._leds))
         pins = tuple(map(lambda pin: f"{pin[0]}: {pin[1]}", pins))
+        self._logger.name = f"{self.__class__.__name__}@{pins}"
 
-        self._logger = logging.getLogger(f"{self.__class__.__name__}@{pins}")
 
     @property
     def value(self):

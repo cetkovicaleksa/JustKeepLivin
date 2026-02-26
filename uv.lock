@@ -7,6 +7,8 @@ members = [
     "gpiohero",
     "justkeeplivin",
     "pi1",
+    "pi2",
+    "pi3",
 ]
 
 [[package]]
@@ -283,6 +285,36 @@ wheels = [
 name = "pi1"
 version = "2026.1.0"
 source = { virtual = "pies/pi1" }
+dependencies = [
+    { name = "gpiohero" },
+    { name = "paho-mqtt" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "gpiohero", editable = "gpiohero" },
+    { name = "paho-mqtt", specifier = ">=2.1.0" },
+]
+
+[[package]]
+name = "pi2"
+version = "2026.2.0"
+source = { virtual = "pies/pi2" }
+dependencies = [
+    { name = "gpiohero" },
+    { name = "paho-mqtt" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "gpiohero", editable = "gpiohero" },
+    { name = "paho-mqtt", specifier = ">=2.1.0" },
+]
+
+[[package]]
+name = "pi3"
+version = "2026.2.0"
+source = { virtual = "pies/pi3" }
 dependencies = [
     { name = "gpiohero" },
     { name = "paho-mqtt" },

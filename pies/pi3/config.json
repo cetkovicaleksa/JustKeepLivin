@@ -1,0 +1,28 @@
+{
+  "name": "PI3",
+  "simulated": true,
+
+  "dht1": {
+    "pin": 17
+  },
+
+  "dht2": {
+    "pin": 16
+  },
+
+  "ir": {
+    "pin": 18
+  },
+
+  "brgb": {
+    "red": 13,
+    "green": 14,
+    "blue": 15
+  },
+
+  "lcd": {},
+
+  "dpir3": {
+    "pin": 11
+  }
+}

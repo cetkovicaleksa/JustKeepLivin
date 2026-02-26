@@ -1,0 +1,32 @@
+{
+  "name": "PI2",
+  "simulated": true,
+
+  "ds2": {
+    "pin": 17
+  },
+
+  "dus2": {
+    "trig": 16,
+    "echo": 20
+  },
+
+  "dpir2": {
+    "pin": 18
+  },
+
+  "timer": {
+    "segments": [1, 2, 3, 4, 5, 6, 7],
+    "digits": [8, 9, 10, 11],
+    "btn": 12
+  },
+
+  "dht3": {
+    "pin": 15
+  },
+
+  "gsg": {
+
+  }
+
+}

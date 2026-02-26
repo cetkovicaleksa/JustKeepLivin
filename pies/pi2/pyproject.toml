@@ -1,0 +1,9 @@
+[project]
+name = "pi2"
+version = "2026.2.0"
+description = "Add your description here"
+requires-python = ">=3.10"
+dependencies = [
+    "gpiohero",
+    "paho-mqtt>=2.1.0",
+]
