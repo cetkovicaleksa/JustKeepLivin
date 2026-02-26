@@ -20,6 +20,9 @@ class Display(AbstractContextManager):
     def __exit__(self, exc_type, exc_value, traceback):
         self.close()
 
+    def __enter__(self) -> 'Display': # just for type hints
+        return super().__enter__()
+
 def main():
     logging.basicConfig(level=logging.INFO)
 
