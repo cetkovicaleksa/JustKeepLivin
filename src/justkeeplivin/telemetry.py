@@ -42,7 +42,7 @@ def on_motion_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("motion")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("detected", data["detected"])
         )
@@ -54,7 +54,7 @@ def on_proximity_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("proximity")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("distance", data["distance"]) # meters (see if it could be like 2m or 20cm)
             .field("in_range", data["in_range"])
@@ -67,7 +67,7 @@ def on_typing_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("typing")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("keys", data["keys"]) # typed keys
         )
@@ -79,7 +79,7 @@ def on_temperature_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("temperature")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("temperature", data["temperature"])
             .field("humidity", data["humidity"])
@@ -92,7 +92,7 @@ def on_ir_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("remote")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("button", data["button"])
         )
@@ -104,11 +104,11 @@ def on_gyro_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("gyro")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
-            .field("accel", accel := cast(dict, data["accel"]))
+            .field("accel", accel := data["accel"])
             .field("gyro", data["gyro"])
-            .field("magnitude", magnitude := sum(xi**2 for xi in accel.values())**1/2)
+            .field("magnitude", magnitude := sum(xi**2 for xi in accel)**0.5)
             .field("significant_movement", magnitude > 0.5) # g
         )
 
@@ -119,7 +119,7 @@ def on_timer_message(client: Client, userdata: object, message: Message):
     if data := try_parse_message(message):
         write(
             Point("timer")
-            .tag(KEY_LOCATION, location)
+            .tag(KEY_LOCATION, location.upper())
             .tag(KEY_SIMULATED, _is_simulated(data))
             .field("event", data["event"]) # reset | expired (maybe also set new timer delay confirmation "set")
         )

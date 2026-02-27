@@ -2,6 +2,7 @@
 # https://docs.influxdata.com/influxdb/v2/install/use-docker-compose/
 # https://grafana.com/docs/grafana/latest/setup-grafana/installation/docker/
 # https://grafana.com/docs/grafana/latest/datasources/influxdb/configure-influxdb-data-source/
+# https://grafana.com/docs/grafana/latest/administration/provisioning/
 
 name: justkeeplivin
 
@@ -37,7 +38,9 @@ services:
     expose: ["3000"]
     configs:
       - source: grafana-sources
-        target: /etc/grafana/provisioning/datasources/custom.yaml
+        target: /etc/grafana/provisioning/datasources/default.yaml
+      - source: grafana-providers
+        target: /etc/grafana/provisioning/dashboards/default.yaml
     networks: 
       - jkl-net
 

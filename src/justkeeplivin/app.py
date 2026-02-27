@@ -6,6 +6,8 @@ from .routes import main
 from .api import api
 from .x import init_extensions
 from .telemetry import init_app as init_telemetry
+from .security import init_app as init_security
+from .lighting import init_app as init_lighting
 
 
 def create_app():
@@ -17,6 +19,8 @@ def create_app():
         app.register_blueprint(bp)
 
     init_telemetry(app)
+    init_security(app)
+    init_lighting(app)
     return app
 
 def load_config(app: Flask):

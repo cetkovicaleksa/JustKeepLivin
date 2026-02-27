@@ -1,0 +1,60 @@
+from collections import defaultdict
+
+import RPi.GPIO as GPIO
+from threading import Lock
+from typing import Iterable
+from gpiozero.threads import GPIOThread
+from itertools import islice
+
+
+class Display:
+
+    digit_map = defaultdict(lambda: (0,0,0,0,0,0,0), {
+        '0':(1,1,1,1,1,1,0),
+        '1':(0,1,1,0,0,0,0),
+        '2':(1,1,0,1,1,0,1),
+        '3':(1,1,1,1,0,0,1),
+        '4':(0,1,1,0,0,1,1),
+        '5':(1,0,1,1,0,1,1),
+        '6':(1,0,1,1,1,1,1),
+        '7':(1,1,1,0,0,0,0),
+        '8':(1,1,1,1,1,1,1),
+        '9':(1,1,1,1,0,1,1)
+    })
+
+    def __init__(self, segments: Iterable[int], digits: Iterable[int]):
+        assert len(segments) in {6, 7} and len(digits) == 4
+
+        self.segments = tuple(islice(segments, 6))
+        self.digits = tuple(digits)
+
+        self._current_digits = " " * 4
+        # self._digit_lock = Lock()
+        self._display_thread = GPIOThread(self._display)
+
+    def show(self, digits: str):
+        digits = digits[:4].rjust(4)
+        self._display_queue.put(digits)
+
+    def clear(self):
+        self.show("")
+
+    def _display(self):
+        while not self._display_thread.stopping.is_set():
+            digits = self._current_digits
+
+            for d_pin, d_sig in zip(self.digits, map(self.digit_map.get, digits)):
+                for s_pin, s_sig in zip(self.segments, d_sig):
+                    ...
+
+                    GPIO.output(d_pin, 1)
+
+
+import logging
+
+class Logger(logging.Logger):
+    ...
+
+
+
+

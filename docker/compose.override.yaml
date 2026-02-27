@@ -26,6 +26,10 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: adminpass
+      GF_SECURITY_ALLOW_EMBEDDING: true
+      GF_AUTH_ANONYMOUS_ENABLED: true
+    volumes:
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
     depends_on: [influxdb2]
 
 configs:
@@ -51,7 +55,7 @@ configs:
       apiVersion: 1
 
       datasources:
-        - name: InfluxDB2
+        - name: InfluxDB
           type: influxdb
           access: proxy
           url: http://influxdb2:8086
@@ -62,3 +66,15 @@ configs:
             defaultBucket: justkeeplivin
           secureJsonData:
             token: very-secure-admin-token-indeed
+
+  grafana-providers:
+    content: |
+      apiVersion: 1
+      
+      providers:
+        - name: dashboards
+          type: file
+          updateIntervalSeconds: 5
+          options: 
+            path: /var/lib/grafana/dashboards
+            foldersFromFilesStructure: true
