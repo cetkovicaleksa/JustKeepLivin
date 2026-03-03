@@ -9,17 +9,20 @@
 
   "dl": {
     "name": "DL",
-    "pin": 18
+    "pin": 18,
+    "simulated": true
   },
 
   "db": {
     "name": "DB",
-    "pin": 13
+    "pin": 13,
+    "simulated": true
   },
 
   "dpir1": {
     "name": "DPIR1",
-    "pin": 27
+    "pin": 27,
+    "simulated": true
   },
 
   "dus1": {
@@ -32,6 +35,7 @@
     "name": "DMS",
     "rows": [8, 7, 1, 12],
     "cols": [16, 20, 21, 26],
-    "labels": ["123A", "456B", "789C", "*0#D"]
+    "labels": ["123A", "456B", "789C", "*0#D"],
+    "simulated": true
   }
 }

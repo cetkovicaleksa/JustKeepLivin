@@ -15,11 +15,11 @@ class IrReceiver:
     SIM_PRESS_DELAY: float = 1
     SIM_PAUSE_DELAY: float = 10
     SIM_INITIAL_DELAY: float = .0001
-    SIM_MESSAGES: Iterable[IrMessage | None] | None = None
+    SIM_MESSAGES: 'Iterable[IrMessage | None] | None' = None
 
     def __init__(self, pin: int = 0):
         self.pin = pin
-        self.when_message: Callable[[IrMessage,], None] | None = None
+        self.when_message: 'Callable[[IrMessage,], None] | None' = None
 
         self._logger = logging.getLogger(f"{self.__class__.__name__}@GPIO{self.pin}")
         self._simulator_thread = GPIOThread(self._simulator)
@@ -39,8 +39,8 @@ class IrReceiver:
                 continue
 
             self._logger.debug("Received message: %s", message.name)
-            if when_message := getattr(self, 'when_message', None):
-                when_message(message)
+            if getattr(self, 'when_message', None):
+                self.when_message(message)
 
             if self._simulator_thread.stopping.wait(self.SIM_PRESS_DELAY):
                 break
@@ -48,9 +48,8 @@ class IrReceiver:
         self._logger.debug("Simulation stopped")
 
     def close(self):
-        simulator_thread: GPIOThread
-        if simulator_thread := getattr(self, '_simulator_thread', None):
-            simulator_thread.stop()
+        if getattr(self, '_simulator_thread', None):
+            self._simulator_thread.stop()
 
     def __enter__(self):
         return self

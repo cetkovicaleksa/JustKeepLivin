@@ -55,7 +55,7 @@ class Button(_ZeroButton):
         pin = self.pin
         press, release = (pin.drive_high, pin.drive_low) if self.pull_up else (pin.drive_low, pin.drive_high) # type: ignore
 
-        while not self._simulation_thread.stopping.wait(delay := random.uniform(*self.SIM_PRESS_TIME_RANGE)):
+        while not self._simulation_thread.stopping.wait(random.uniform(*self.SIM_PRESS_TIME_RANGE)):
             press()
 
             hold_for = random.uniform(*self.SIM_HOLD_DURATION_RANGE)

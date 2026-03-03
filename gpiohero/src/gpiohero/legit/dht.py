@@ -23,7 +23,7 @@ class DHT11:
     DHTLIB_DHT11_WAKEUP = 0.020#0.018		#18ms
     DHTLIB_TIMEOUT = 0.0001			#100us
 
-    when_measure: Callable[[dict,], None] | None
+    when_measure: 'Callable[[dict,], None] | None'
 
     def __init__(self, pin: int, sample_interval: float = 1):
         self.pin = pin
@@ -100,23 +100,22 @@ class DHT11:
         ok = 0
 
         while not self._polling_thread.stopping.wait(self.sample_interval):
-            if when_measure := getattr(self, 'when_measure', None):
+            if getattr(self, 'when_measure', None):
                 total += 1
 
-                match chk := self.readDHT11():
-                    case self.DHTLIB_OK:
-                        ok += 1
-                        when_measure({
-                            "temperature": self.temperature,
-                            "humidity": self.humidity,
-                        })
-                    case _:
-                        self._logger.info("Reading error: %s [%d sucessfull readings out of %d, %f accuracy]", chk, ok, total, ok/total * 100)
+                chk = self.readDHT11()
+                if chk == self.DHTLIB_OK:
+                    ok += 1
+                    self.when_measure({
+                        "temperature": self.temperature,
+                        "humidity": self.humidity,
+                    })
+                else:
+                    self._logger.info("Reading error: %s [%d sucessfull readings out of %d, %f accuracy]", chk, ok, total, ok/total * 100)
 
     def close(self):
-        polling_thread: GPIOThread
-        if polling_thread := getattr(self, '_polling_thread', None):
-            polling_thread.stop()
+        if getattr(self, '_polling_thread', None):
+            self._polling_thread.stop()
 
         GPIO.cleanup(self.pin)
 

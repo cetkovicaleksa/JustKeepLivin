@@ -12,7 +12,7 @@ from config import *
 from colorzero import Color
 
 shutdown_event = Event()
-data_thread: Thread | None = None
+data_thread: 'Thread | None' = None
 
 config = load_config()
 client = mqtt.Client(
@@ -84,15 +84,14 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
     client.on_connect = lambda client, userdata, flags, rc, prop: client.subscribe(TOPICS)
 
-    with (
-        DoorSensor(config) as ds2,
-        DoorUltrasonicSensor(config) as dus2,
-        DoorMotionSensor(config) as dpir2,
-        KitchenDisplayTimer(config) as timer,
-        KitchenButton(config) as btn,
-        KitchenDHT(config) as dht3,
-        Gyroscope(config) as gsg,
-    ):
+    with DoorSensor(config) as ds2, \
+        DoorUltrasonicSensor(config) as dus2, \
+        DoorMotionSensor(config) as dpir2, \
+        KitchenDisplayTimer(config) as timer, \
+        KitchenButton(config) as btn, \
+        KitchenDHT(config) as dht3, \
+        Gyroscope(config) as gsg:
+
         ds2.when_pressed = ds2.when_released = door_sensor_changed
         dus2.when_in_range = dus2.when_out_of_range = door_ultrasonic_sensor_changed
         dpir2.when_motion = dpir2.when_no_motion = door_motion_sensor_changed
@@ -113,11 +112,10 @@ def main():
                 ...
                 return
 
-            match message.topic:
-                case "cmd/home/kitchen/timer":
-                    ... # TODO
-                case topic:
-                    logging.debug("Unhandled message on topic: %s", topic)
+            if "cmd/home/kitchen/timer" == message.topic:
+                ... # TODO
+            else:
+                logging.debug("Unhandled message on topic: %s", message.topic)
 
         client.on_message = on_message
         client.connect(

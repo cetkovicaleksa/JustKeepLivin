@@ -41,7 +41,7 @@ from gpiozero.threads import GPIOThread
 
 
 class MPU:
-    when_measure: Callable[[dict,], None] | None
+    when_measure: 'Callable[[dict,], None] | None'
 
     def __init__(self, bus: int = 1, address: int = C.MPU6050_DEFAULT_ADDRESS, sample_interval: float = .5):
         self._mpu = MPU6050(bus, address)
@@ -53,18 +53,17 @@ class MPU:
 
     def _poll(self):
         while not self._polling_thread.stopping.wait(self.sample_interval):
-            if when_measure := getattr(self, 'when_measure', None):
+            if getattr(self, 'when_measure', None):
                 accel, gyro = self._mpu.get_acceleration(), self._mpu.get_rotation()
 
-                when_measure(dict(
+                self.when_measure(dict(
                     accel=tuple(a / 131.0 for a in accel),
                     gyro=tuple(g / 16384.0 for g in gyro),
                 ))
 
     def close(self):
-        polling_thread: GPIOThread
-        if polling_thread := getattr(self, '_polling_thread', None):
-            polling_thread.stop()
+        if getattr(self, '_polling_thread', None):
+            self._polling_thread.stop()
 
         # cleanup??
 

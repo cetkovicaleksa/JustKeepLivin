@@ -57,7 +57,7 @@ class ContdownTimer(AbstractContextManager):
         with self._lock:
             self._stop()
 
-    def reset(self, duration: int | None = None, start: bool = True):
+    def reset(self, duration: 'int | None' = None, start: bool = True):
         with self._lock:
             self._stop()
             self._reset(duration or self._duration)
@@ -79,8 +79,10 @@ class ContdownTimer(AbstractContextManager):
     def _start(self):
         if (
             self.expired
-            or (countdown_thread := getattr(self, "_countdown_thread", None))
-            and countdown_thread.is_alive()
+            or (
+                getattr(self, "_countdown_thread", None)
+                and self._countdown_thread.is_alive()
+            )
         ):
                 return
 
@@ -100,8 +102,8 @@ class ContdownTimer(AbstractContextManager):
 
     def _stop(self):
         if (
-            (countdown_thread := getattr(self, "_countdown_thread", None))
-            and countdown_thread.is_alive()
+            getattr(self, "_countdown_thread", None)
+            and self._countdown_thread.is_alive()
         ):
             self._countdown_thread.stop()
             self._countdown_thread = None

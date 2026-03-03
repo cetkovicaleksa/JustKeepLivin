@@ -77,7 +77,7 @@ def DoorUltrasonicSensor(config: Pi1Config, *args, **kwargs):
 
 def DoorMembraneSwitch(config: Pi1Config, *args, **kwargs):
     clazz = sim.MatrixKeypad if config.simulated or config.dms.simulated else legit.MatrixKeypad
-    return clazz(config.dms.rows, config.dms.cols, labels=config.dms.labels, *args, **kwargs)
+    return clazz(config.dms.rows, config.dms.cols, config.dms.labels, *args, **kwargs)
 
 def DoorLight(config: Pi1Config, *args, **kwargs):
     clazz = sim.LED if config.simulated or config.dl.simulated else legit.LED

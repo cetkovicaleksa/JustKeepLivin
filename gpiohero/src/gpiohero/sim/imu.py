@@ -15,7 +15,7 @@ class MPU:
     SIM_GYRO_SCALE = 50.0     # deg/s multiplier
     SIM_GRAVITY = 9.81                # m/s²
 
-    when_measure: Callable[[dict,], None] | None
+    when_measure: 'Callable[[dict,], None] | None'
 
     def __init__(self, bus: int = 1, address: int = 104, sample_interval: float = .5):
         self._logger = logging.getLogger(f"{self.__class__.__name__}@(bus={bus}, addr={address})")
@@ -29,7 +29,7 @@ class MPU:
         init_t = time.perf_counter()
 
         while not self._simulator_thread.stopping.wait(self.sample_interval):
-            if when_measure := getattr(self, 'when_measure', None):
+            if getattr(self, 'when_measure', None):
                 t = time.perf_counter() - init_t
 
                 angle = sin(2 * pi * self.SIM_FREQ * t)
@@ -43,7 +43,7 @@ class MPU:
                 gyro = self.SIM_MOVEMENT_SCALE * angular_velocity * self.SIM_GYRO_SCALE, 0, 0
 
                 self._logger.debug("Accel: %s [g] Gyro: %s [deg/s]", accel, gyro)
-                when_measure({
+                self.when_measure({
                     "accel": accel,
                     "gyro": gyro,
                 })
@@ -52,9 +52,8 @@ class MPU:
 
 
     def close(self):
-        simulator_thread: GPIOThread
-        if simulator_thread := getattr(self, '_simulator_thread', None):
-            simulator_thread.stop()
+        if getattr(self, '_simulator_thread', None):
+            self._simulator_thread.stop()
 
     def __enter__(self):
         return self

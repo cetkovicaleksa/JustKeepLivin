@@ -15,7 +15,7 @@ from config import (
 
 
 shutdown_event = Event()
-data_thread: Thread | None = None
+data_thread: 'Thread | None' = None
 
 config = load_config()
 client = mqtt.Client(
@@ -84,14 +84,13 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
     client.on_connect = lambda client, userdata, flags, rc, prop: client.subscribe("cmd/home/porch/+")
 
-    with (
-        DoorSensor(config) as ds1,
-        DoorUltrasonicSensor(config) as dus1,
-        DoorMotionSensor(config) as dpir1,
-        DoorMembraneSwitch(config) as dms,
-        DoorBuzzer(config) as db,
-        DoorLight(config) as dl,
-    ):
+    with DoorSensor(config) as ds1, \
+        DoorUltrasonicSensor(config) as dus1,\
+        DoorMotionSensor(config) as dpir1,\
+        DoorMembraneSwitch(config) as dms,\
+        DoorBuzzer(config) as db,\
+        DoorLight(config) as dl:
+
         ds1.when_pressed = ds1.when_released = door_sensor_changed
         dus1.when_in_range = dus1.when_out_of_range = door_ultrasonic_sensor_changed
         dpir1.when_motion = dpir1.when_no_motion = door_motion_sensor_changed
@@ -103,14 +102,14 @@ def main():
         Thread(target=key_buffer_thread, args=(shutdown_event,), daemon=True).start()
 
         def on_message(client: mqtt.Client, userdata, message: mqtt.MQTTMessage):
-            match message.topic:
-                case "cmd/home/porch/light":
-                    device = dl
-                case "cmd/home/porch/buzzer":
-                    device = db
-                case _:
-                    ...
-                    return
+
+            if "cmd/home/porch/light" == message.topic:
+                device = dl
+            elif "cmd/home/porch/buzzer" == message.topic:
+                device = db
+            else:
+                ...
+                return
 
             data: dict
             try:
@@ -118,17 +117,20 @@ def main():
             except json.JSONDecodeError:
                 ...
 
-            match data.get("action"):
-                case "on" | "ON":
-                    device.on()
-                    rollback = device.off
-                case "off" | "OFF":
-                    device.off()
-                    rollback = device.on
+            action = data.get("action")
+            if action in {"on", "ON"}:
+                device.on()
+                rollback = device.off
+            elif action in {"off", "OFF"}:
+                device.off()
+                rollback = device.on
+            else:
+                ...
+                return
 
             try:
-                if for_ := data.get("for"):
-                    timer = Timer(float(for_), rollback)
+                if data.get("for"):
+                    timer = Timer(float(data["for"]), rollback)
                     timer.start()
             except:
                 ...

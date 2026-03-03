@@ -12,7 +12,7 @@ from config import *
 from colorzero import Color
 
 shutdown_event = Event()
-data_thread: Thread | None = None
+data_thread: 'Thread | None' = None
 
 config = load_config()
 client = mqtt.Client(
@@ -83,14 +83,13 @@ def main():
     logging.basicConfig(level=logging.DEBUG)
     client.on_connect = lambda client, userdata, flags, rc, prop: client.subscribe(TOPICS)
 
-    with (
-        BedroomDHT(config) as dht1,
-        MasterBedroomDHT(config) as dht2,
-        BedroomInfrared(config) as ir,
-        BedroomRGB(config) as brgb,
-        LivingRoomDisplay(config) as lcd,
-        LivingRoomMotionSensor(config) as dpir3,
-    ):
+    with BedroomDHT(config) as dht1, \
+        MasterBedroomDHT(config) as dht2, \
+        BedroomInfrared(config) as ir, \
+        BedroomRGB(config) as brgb, \
+        LivingRoomDisplay(config) as lcd, \
+        LivingRoomMotionSensor(config) as dpir3:
+
         dht1.when_measure = lambda measurement: dht_measured(dht1, measurement)
         dht2.when_measure = lambda measurement: dht_measured(dht2, measurement)
         ir.when_message = when_ir_message
@@ -107,35 +106,38 @@ def main():
                 ...
                 return
 
-            match message.topic:
-                case "cmd/home/living_room/display":
-                    match data.get("action"):
-                        case "display" | "DISPLAY":
-                            message = data.get("message", "")
-                            lcd.show(message)
-                        case "clear" | "CLEAR":
-                            lcd.clear()
+            if "cmd/home/living_room/display" == message.topic:
+                action = data.get("action")
 
-                case "cmd/home/bedroom/light":
-                    match data.get("action"):
-                        case "on" | "ON":
-                            colour = data.get("colour", Color.from_rgb(1, 1, 1).html)
-                            brgb.color = Color(colour)
-                            rollback = brgb.off
-                        case "off" | "OFF":
-                            colour = brgb.color
-                            def rollback():
-                                brgb.color = colour
+                if action in {"display", "DISPLAY"}:
+                    message = data.get("message", "")
+                    lcd.show(message)
+                elif action in {"clear", "CLEAR"}:
+                    lcd.clear()
 
-                            brgb.off()
-                    try:
-                        if for_ := data.get("for"):
-                            timer = Timer(float(for_), rollback)
-                            timer.start()
-                    except:
-                        ...
-                case topic:
-                    logging.debug("Unhandled message on topic: %s", topic)
+            elif "cmd/home/bedroom/light" == message.topic:
+                action = data.get("action")
+
+                if action in {"on", "ON"}:
+                    colour = data.get("colour", Color.from_rgb(1, 1, 1).html)
+                    brgb.color = Color(colour)
+                    rollback = brgb.off
+                elif action in {"off", "OFF"}:
+                    colour = brgb.color
+                    def rollback():
+                        brgb.color = colour
+
+                    brgb.off()
+                else: return
+
+                try:
+                    if data.get("for"):
+                        timer = Timer(float(data["for"]), rollback)
+                        timer.start()
+                except:
+                    ...
+            else:
+                logging.debug("Unhandled message on topic: %s", message.topic)
 
         def dht_measured(dht, measurement):
             location, dht_conf = \

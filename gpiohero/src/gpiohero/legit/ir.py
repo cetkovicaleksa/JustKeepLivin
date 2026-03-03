@@ -68,7 +68,7 @@ class IrReceiver:
         # GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN)
 
-        self.when_message: Callable[[IrMessage,], None] | None = None
+        self.when_message: 'Callable[[IrMessage,], None] | None' = None
         self._listening_thread = GPIOThread(self._listen)
         self._listening_thread.start()
 
@@ -79,8 +79,8 @@ class IrReceiver:
             except:
                 pass
             else:
-                if when_message := getattr(self, 'when_message', None):
-                    when_message(message)
+                if getattr(self, 'when_message', None):
+                    self.when_message(message)
 
 
     def _getBinary(self):
@@ -135,9 +135,8 @@ class IrReceiver:
         return binary
 
     def close(self):
-        listening_thread: GPIOThread
-        if listening_thread := getattr(self, '_listening_thread', None):
-            listening_thread.stop()
+        if getattr(self, '_listening_thread', None):
+            self._listening_thread.stop()
 
         GPIO.cleanup(self.pin)
 

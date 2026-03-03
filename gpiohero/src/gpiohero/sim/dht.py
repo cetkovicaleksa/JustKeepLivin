@@ -13,7 +13,7 @@ class DHT11:
     SIM_INITAL_HUM = 60
     SIM_HUM_FLUX = 1
 
-    when_measure: Callable[[dict,], None] | None
+    when_measure: 'Callable[[dict,], None] | None'
 
     def __init__(self, pin: int = 0, sample_interval: float = 1):
         self._logger = logging.getLogger(f"{self.__class__.__name__}@GPIO{pin}")
@@ -29,12 +29,12 @@ class DHT11:
         humidity = self.SIM_INITAL_HUM
 
         while not self._simulator_thread.stopping.wait(self.sample_interval):
-            if when_measure := getattr(self, 'when_measure', None):
+            if getattr(self, 'when_measure', None):
                 temperature = max(-273.15, temperature + random.uniform(-self.SIM_TEMP_FLUX, self.SIM_TEMP_FLUX))
                 humidity = min(100, max(0, humidity + random.uniform(-self.SIM_HUM_FLUX, self.SIM_HUM_FLUX)))
 
                 self._logger.debug("Temperature: %.2f℃ Humidity: %.2f%%", temperature, humidity)
-                when_measure({
+                self.when_measure({
                     "temperature": temperature,
                     "humidity": humidity,
                 })
@@ -43,9 +43,8 @@ class DHT11:
 
 
     def close(self):
-        simulator_thread: GPIOThread
-        if simulator_thread := getattr(self, '_simulator_thread', None):
-            simulator_thread.stop()
+        if getattr(self, '_simulator_thread', None):
+            self._simulator_thread.stop()
 
     def __enter__(self):
         return self
